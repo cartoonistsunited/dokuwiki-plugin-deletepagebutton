@@ -84,14 +84,14 @@ class action_plugin_deletepagebutton extends DokuWiki_Action_Plugin {
      * @param Doku_Event $event
      */
     public function deletePage(Doku_Event $event) {
-        global $ID, $INFO, $lang;
+        global $ID, $INFO, $lang, $INPUT;
 
         // Ignore other actions
         if ($event->data != 'deletepagebutton') {
             return;
         };
 
-        if(checkSecurityToken() && $INFO['exists']) {
+        if($INPUT->server->str('REMOTE_USER') && auth_quickaclcheck($ID) >= AUTH_EDIT && checkSecurityToken() && $INFO['exists']) {
             // Save the page with empty contents to delete it
             saveWikiText($ID, null, $lang['deleted']);
 
